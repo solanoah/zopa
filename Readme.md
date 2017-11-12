@@ -27,7 +27,7 @@ You need to install the following tools
 * [Maven](https://maven.apache.org/) - Dependency Management
 
 ## Building the code:
-* Unzip the supplied zip file
+* Clone from git or unzip the supplied zip file
 * From the terminal (MAC) navigate to the root location of the project, where the POM is.
 
 ```
