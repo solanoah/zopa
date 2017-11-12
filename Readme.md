@@ -35,7 +35,7 @@ mvn clean install
 ```
 
 ## Running the App
-* Sample test files are located at /src/test/resources
+* Sample test file is located at /src/test/resources
 ```
 From the root path, run the following commands:
 
