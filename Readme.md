@@ -1,12 +1,12 @@
 # Zopa Rate Calculation system
 
 ## Problem Statement
-There is a need for a rate calculation system allowing prospective borrowers to obtain a quote from our pool of lenders for 36 month loans.
+There is a need for a rate calculation system allowing prospective borrowers to obtain a quote from zopa's pool of lenders for 36 month loans.
 
-This new system strive to provide as low a rate to the borrower as is possible to ensure that Zopa's quotes are as competitive as they can be against our competitors'. 
+This new system should strive to provide as low a rate to the borrower as is possible to ensure that Zopa's quotes are as competitive as they can be against our competitors'. 
 
-And to provide the borrower with the details of the monthly repayment amount and the total repayment amount.
- 
+And also to provide the borrower with the details of the monthly repayment amount and the total repayment amount.
+
 
 ## Assumptions
 * That the supplied rate in the excel file is yearly rate
