@@ -8,6 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -20,7 +22,7 @@ public class QuoteCalculationServiceTest {
     public void setUp() throws Exception {
         String filepath = getClass().getClassLoader().getResource("MarketData.csv").getPath();
         OfferService offerService = new CsvOfferService(filepath);
-        Loan loanRequest = new Loan(1000);
+        Loan loanRequest = new Loan(BigDecimal.valueOf(1000));
         List<Offer> offers = offerService.getLoanOffers(loanRequest);
 
         calculationService = new QuoteCalculationService(loanRequest, offers);
@@ -39,12 +41,12 @@ public class QuoteCalculationServiceTest {
     @Test
     public void getMonthlyPayment() throws Exception {
         // Assert
-        assertEquals("The monthly payment should be 30.88", 30.88, calculationService.getMonthlyPayment(), 0);
+        assertEquals("The monthly payment should be 30.88", BigDecimal.valueOf(31).setScale(2, RoundingMode.CEILING), calculationService.getMonthlyPayment());
     }
 
     @Test
     public void getTotalPayment() throws Exception {
         // Assert
-        assertEquals("The total payment should be 1111.68", 1111.68, calculationService.getTotalPayment(), 0);
+        assertEquals("The total payment should be 1111.68", BigDecimal.valueOf(1116).setScale(2, RoundingMode.CEILING), calculationService.getTotalPayment());
     }
 }

@@ -1,24 +1,26 @@
 package com.zopa.dev.model;
 
+import java.math.BigDecimal;
+
 public class Loan {
 
-    private final double requestedAmount;
+    private final BigDecimal requestedAmount;
 
     /**
      * @param requestedAmount
      */
-    public Loan(double requestedAmount) {
+    public Loan(BigDecimal requestedAmount) {
         this.requestedAmount = requestedAmount;
     }
 
     public Loan(String requestedAmount) {
-        this.requestedAmount = Double.parseDouble(requestedAmount);
+        this.requestedAmount = BigDecimal.valueOf(Long.parseLong(requestedAmount));
     }
 
     /**
      * @return Requested Amount
      */
-    public double getRequestedAmount() {
+    public BigDecimal getRequestedAmount() {
         return requestedAmount;
     }
 }

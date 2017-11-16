@@ -1,20 +1,22 @@
 package com.zopa.dev.model;
 
 
+import java.math.BigDecimal;
+
 public class Offer implements Comparable<Offer> {
 
     private final String lender;
     private final double rate;
-    private final double availableAmount;
-    private double neededAmount;
-    private double monthlyPayment;
+    private final BigDecimal availableAmount;
+    private BigDecimal neededAmount;
+    private BigDecimal monthlyPayment;
 
     /**
      * @param lender
      * @param rate
      * @param availableAmount
      */
-    public Offer(String lender, double rate, double availableAmount) {
+    public Offer(String lender, double rate, BigDecimal availableAmount) {
         this.lender = lender;
         this.rate = rate;
         this.availableAmount = availableAmount;
@@ -24,7 +26,7 @@ public class Offer implements Comparable<Offer> {
 
         lender = null;
         rate = 0;
-        availableAmount = 0;
+        availableAmount = BigDecimal.valueOf(0);
     }
 
     @Override
@@ -49,7 +51,7 @@ public class Offer implements Comparable<Offer> {
     /**
      * @return Available amount
      */
-    public double getAvailableAmount() {
+    public BigDecimal getAvailableAmount() {
         return availableAmount;
     }
 
@@ -77,28 +79,28 @@ public class Offer implements Comparable<Offer> {
     /**
      * @param neededAmount
      */
-    public void setNeededAmount(double neededAmount) {
+    public void setNeededAmount(BigDecimal neededAmount) {
         this.neededAmount = neededAmount;
     }
 
     /**
      * @return the needed amount
      */
-    public double getNeededAmount() {
+    public BigDecimal getNeededAmount() {
         return neededAmount;
     }
 
     /**
      * @param monthlyPayment set the monthly payment
      */
-    public void setMonthlyPayment(double monthlyPayment) {
+    public void setMonthlyPayment(BigDecimal monthlyPayment) {
         this.monthlyPayment = monthlyPayment;
     }
 
     /**
      * @return returns the monthly payment
      */
-    public double getMonthlyPayment() {
+    public BigDecimal getMonthlyPayment() {
         return monthlyPayment;
     }
 }

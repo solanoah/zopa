@@ -7,6 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -50,7 +52,7 @@ public class CsvOfferServiceTest {
     @Test(expected = InsufficientOfferException.class)
     public void getOffers_not_sufficient_available_amount() throws IOException {
         // Arrange
-        Loan loanRequest = new Loan(5000);
+        Loan loanRequest = new Loan(BigDecimal.valueOf(5000));
 
         // Assert
         List<Offer> offers = offerService.getLoanOffers(loanRequest);
@@ -59,43 +61,43 @@ public class CsvOfferServiceTest {
     @Test
     public void getOffers_applicable_to_loan_amount_1000() throws IOException {
         // Arrange
-        Loan loanRequest = new Loan(1000);
+        Loan loanRequest = new Loan(BigDecimal.valueOf(1000));
 
         // Action
         List<Offer> offers = offerService.getLoanOffers(loanRequest);
-        double sumNeededAmount = offers.stream().map(t -> t.getNeededAmount()).reduce(0d, (a, b) -> a + b);
+        BigDecimal sumNeededAmount = offers.stream().map(t -> t.getNeededAmount()).reduce(BigDecimal.valueOf(0d), (a, b) -> a.add(b)).setScale(2, RoundingMode.CEILING);
 
         // Asserts
         assertEquals("2 offers are applicable to 1000 request", 2, offers.size());
-        assertEquals("Needed amount sum must not exceed loan request amount", 1000d, sumNeededAmount, 0);
+        assertEquals("Needed amount sum must not exceed loan request amount", loanRequest.getRequestedAmount().setScale(2, RoundingMode.CEILING), sumNeededAmount);
     }
 
     @Test
     public void getOffers_applicable_to_loan_amount_1200() throws IOException {
         // Arrange
-        Loan loanRequest = new Loan(1200);
+        Loan loanRequest = new Loan(BigDecimal.valueOf(1200));
 
         // Action
         List<Offer> offers = offerService.getLoanOffers(loanRequest);
-        double sumNeededAmount = offers.stream().map(t -> t.getNeededAmount()).reduce(0d, (a, b) -> a + b);
+        BigDecimal sumNeededAmount = offers.stream().map(t -> t.getNeededAmount()).reduce(BigDecimal.valueOf(0d), (a, b) -> a.add(b)).setScale(2, RoundingMode.CEILING);
 
         // Assert
         assertEquals("4 offers are applicable to 1200 request", 4, offers.size());
-        assertEquals("Needed amount sum must not exceed loan request amount", 1200d, sumNeededAmount, 0);
+        assertEquals("Needed amount sum must not exceed loan request amount", loanRequest.getRequestedAmount().setScale(2, RoundingMode.CEILING), sumNeededAmount);
     }
 
     @Test
     public void getOffers_applicable_to_loan_amount_1500() throws IOException {
         // Arrange
-        Loan loanRequest = new Loan(1500);
+        Loan loanRequest = new Loan(BigDecimal.valueOf(1500));
 
         // Action
         List<Offer> offers = offerService.getLoanOffers(loanRequest);
-        double sumNeededAmount = offers.stream().map(t -> t.getNeededAmount()).reduce(0d, (a, b) -> a + b);
+        BigDecimal sumNeededAmount = offers.stream().map(t -> t.getNeededAmount()).reduce(BigDecimal.valueOf(0d), (a, b) -> a.add(b)).setScale(2, RoundingMode.CEILING);
 
         // Assert
         assertEquals("5 offers are applicable to 1500 request", 5, offers.size());
-        assertEquals("Needed amount sum must not exceed loan request amount", 1500d, sumNeededAmount, 0);
-        assertEquals("Needed amount should be 300", 300, offers.get(4).getNeededAmount(), 0);
+        assertEquals("Needed amount sum must not exceed loan request amount", loanRequest.getRequestedAmount().setScale(2, RoundingMode.CEILING), sumNeededAmount);
+        assertEquals("Needed amount should be 300", BigDecimal.valueOf(300), offers.get(4).getNeededAmount());
     }
 }

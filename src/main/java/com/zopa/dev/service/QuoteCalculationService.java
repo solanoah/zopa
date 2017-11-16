@@ -4,6 +4,9 @@ import com.zopa.dev.contracts.CalculationService;
 import com.zopa.dev.model.Loan;
 import com.zopa.dev.model.Offer;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.List;
 
 import static com.zopa.dev.constants.QuoteConstant.TERM_MONTHS;
@@ -38,29 +41,31 @@ public class QuoteCalculationService implements CalculationService {
      * @return Returns monthly payment
      */
     @Override
-    public double getMonthlyPayment() {
-
+    public BigDecimal getMonthlyPayment() {
+        MathContext mc = new MathContext(2, RoundingMode.HALF_UP);
         this.offers.forEach(offer -> {
             // monthly offer rate
             double offerMonthlyRate = offer.getRate()/12;
             // Compound interest calculation
-            double offerMonthlyPayment = (offer.getNeededAmount() * offerMonthlyRate) / (1 - Math.pow(1 + offerMonthlyRate, -TERM_MONTHS));
+            BigDecimal offerMonthlyPayment = (offer.getNeededAmount().multiply(BigDecimal.valueOf(offerMonthlyRate)).divide(BigDecimal.valueOf((1 - Math.pow(1 + offerMonthlyRate, -TERM_MONTHS))), mc));
             // update offer with monthly repayment
             offer.setMonthlyPayment(offerMonthlyPayment);
         });
 
         // sum monthly payment for all offers to get total
-        double totalMonthly = this.offers.stream().mapToDouble(t -> t.getMonthlyPayment()).sum();
+        BigDecimal totalMonthly = BigDecimal.valueOf(0);
+        for (Offer offer : this.offers) {
+            totalMonthly = totalMonthly.add(offer.getMonthlyPayment());
+        }
 
-        // set to 2 decimal precision
-        return Math.round(totalMonthly * 100.00)/100.00;
+        return totalMonthly.setScale(2, RoundingMode.CEILING);
     }
 
     /**
      * @return Returns Total payment
      */
     @Override
-    public double getTotalPayment() {
-        return this.getMonthlyPayment() * TERM_MONTHS;
+    public BigDecimal getTotalPayment() {
+        return this.getMonthlyPayment().multiply(BigDecimal.valueOf(TERM_MONTHS)).setScale(2, RoundingMode.CEILING);
     }
 }

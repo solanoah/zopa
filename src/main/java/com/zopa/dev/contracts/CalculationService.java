@@ -1,5 +1,7 @@
 package com.zopa.dev.contracts;
 
+import java.math.BigDecimal;
+
 public interface CalculationService {
     /**
      * @return Returns average rate
@@ -9,10 +11,10 @@ public interface CalculationService {
     /**
      * @return Returns monthly payment
      */
-    double getMonthlyPayment();
+    BigDecimal getMonthlyPayment();
 
     /**
      * @return Returns Total payment
      */
-    double getTotalPayment();
+    BigDecimal getTotalPayment();
 }

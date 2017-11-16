@@ -4,6 +4,8 @@ import com.zopa.dev.Exceptions.InvalidRequestAmountException;
 import com.zopa.dev.contracts.ValidationService;
 import com.zopa.dev.model.Loan;
 
+import java.math.BigDecimal;
+
 import static com.zopa.dev.constants.QuoteConstant.INCREMENT_AMOUNT;
 import static com.zopa.dev.constants.QuoteConstant.LOWER_RANGE;
 import static com.zopa.dev.constants.QuoteConstant.UPPER_RANGE;
@@ -28,13 +30,13 @@ public class LoanValidationService implements ValidationService {
     @Override
     public boolean Validate(Loan loan) throws InvalidRequestAmountException {
 
-        if (loan.getRequestedAmount() < LOWER_RANGE || loan.getRequestedAmount() > UPPER_RANGE) {
+        if (loan.getRequestedAmount().compareTo(LOWER_RANGE) < 0 || loan.getRequestedAmount().compareTo(UPPER_RANGE) > 0) {
             throw new InvalidRequestAmountException("The requested amount is out of range 1000 and 15000");
         }
 
-        double remainder = loan.getRequestedAmount()  % INCREMENT_AMOUNT;
+        BigDecimal remainder = loan.getRequestedAmount().remainder(INCREMENT_AMOUNT);
 
-        if (remainder > 0)
+        if (remainder.intValueExact() > 0)
             throw new InvalidRequestAmountException("The requested amount is not incremental of 100");
 
         return true;

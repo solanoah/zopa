@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,22 +44,22 @@ public class CsvOfferService implements OfferService {
         List<Offer> offerList = getAvailableOffers();
 
         // Calculate available sum
-        double sumAvailableAmount = offers.stream().map(t -> t.getAvailableAmount()).reduce(0d, (a, b) -> a + b);
+        BigDecimal sumAvailableAmount = offers.stream().map(t -> t.getAvailableAmount()).reduce(BigDecimal.valueOf(0), (a, b) -> a.add(b));
 
-        if (sumAvailableAmount < loan.getRequestedAmount())
+        if (sumAvailableAmount.compareTo(loan.getRequestedAmount()) < 0)
             throw new InsufficientOfferException();
         
         // get all applicable offers to fulfill the requested amount
-        double limit = 0d;
+        BigDecimal limit = new BigDecimal(0);
         ArrayList<Offer> applicableOffers = new ArrayList<>();
         for (Offer offer : offerList) {
-            limit += offer.getAvailableAmount();
+            limit = limit.add(offer.getAvailableAmount());
 
-            if (limit >= loan.getRequestedAmount()){
-                offer.setNeededAmount(offer.getAvailableAmount() - (limit - loan.getRequestedAmount()));
+            if (limit.compareTo(loan.getRequestedAmount()) >= 0) {
+                offer.setNeededAmount(offer.getAvailableAmount().subtract(limit.subtract(loan.getRequestedAmount())));
                 applicableOffers.add(offer);
                 break;
-            }else {
+            } else {
                 offer.setNeededAmount(offer.getAvailableAmount());
                 applicableOffers.add(offer);
             }
@@ -110,7 +111,7 @@ public class CsvOfferService implements OfferService {
         if (splitted.length == 3) {
             String lender = splitted[0];
             double rate = Double.parseDouble(splitted[1]);
-            float amount = Float.parseFloat(splitted[2]);
+            BigDecimal amount = BigDecimal.valueOf(Long.parseLong(splitted[2]));
 
             this.offers.add(new Offer(lender, rate, amount));
         }
