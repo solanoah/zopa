@@ -42,7 +42,7 @@ public class QuoteCalculationService implements CalculationService {
      */
     @Override
     public BigDecimal getMonthlyPayment() {
-        MathContext mc = new MathContext(2, RoundingMode.HALF_UP);
+        MathContext mc = new MathContext(2, RoundingMode.HALF_DOWN);
         this.offers.forEach(offer -> {
             // monthly offer rate
             double offerMonthlyRate = offer.getRate()/12;
@@ -58,7 +58,7 @@ public class QuoteCalculationService implements CalculationService {
             totalMonthly = totalMonthly.add(offer.getMonthlyPayment());
         }
 
-        return totalMonthly.setScale(2, RoundingMode.CEILING);
+        return totalMonthly.setScale(2, RoundingMode.UNNECESSARY);
     }
 
     /**
@@ -66,6 +66,6 @@ public class QuoteCalculationService implements CalculationService {
      */
     @Override
     public BigDecimal getTotalPayment() {
-        return this.getMonthlyPayment().multiply(BigDecimal.valueOf(TERM_MONTHS)).setScale(2, RoundingMode.CEILING);
+        return this.getMonthlyPayment().multiply(BigDecimal.valueOf(TERM_MONTHS)).setScale(2, RoundingMode.UNNECESSARY);
     }
 }

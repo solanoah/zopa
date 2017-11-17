@@ -17,22 +17,12 @@ public class CsvOfferService implements OfferService {
 
     private final ArrayList<Offer> offers = new ArrayList<>();
     private final String filepath;
-    private BufferedReader reader = null;
 
     /**
      * @param filepath
      */
     public CsvOfferService(String filepath) {
         this.filepath = filepath;
-    }
-
-    /**
-     * @throws IOException
-     */
-    @Override
-    public void finalize() throws IOException {
-        if (reader != null)
-            reader.close();
     }
 
     /**
@@ -81,6 +71,8 @@ public class CsvOfferService implements OfferService {
      * @throws IOException
      */
     private void processFile() throws IOException {
+        BufferedReader reader = null;
+
         try {
             File inputFile = new File(this.filepath);
             reader = new BufferedReader(new FileReader(inputFile));
@@ -94,6 +86,9 @@ public class CsvOfferService implements OfferService {
         } catch (IOException e) {
             e.printStackTrace();
             throw e;
+        } finally {
+            if (reader != null)
+                reader.close();
         }
     }
 
@@ -111,7 +106,7 @@ public class CsvOfferService implements OfferService {
         if (splitted.length == 3) {
             String lender = splitted[0];
             double rate = Double.parseDouble(splitted[1]);
-            BigDecimal amount = BigDecimal.valueOf(Long.parseLong(splitted[2]));
+            BigDecimal amount = new BigDecimal(splitted[2]);
 
             this.offers.add(new Offer(lender, rate, amount));
         }

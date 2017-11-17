@@ -76,6 +76,11 @@ public class Offer implements Comparable<Offer> {
                 this.getLender() == objOffer.getLender();
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     /**
      * @param neededAmount
      */

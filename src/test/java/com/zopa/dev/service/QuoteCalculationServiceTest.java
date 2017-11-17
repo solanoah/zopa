@@ -22,7 +22,7 @@ public class QuoteCalculationServiceTest {
     public void setUp() throws Exception {
         String filepath = getClass().getClassLoader().getResource("MarketData.csv").getPath();
         OfferService offerService = new CsvOfferService(filepath);
-        Loan loanRequest = new Loan(BigDecimal.valueOf(1000));
+        Loan loanRequest = new Loan(new BigDecimal("1000.00"));
         List<Offer> offers = offerService.getLoanOffers(loanRequest);
 
         calculationService = new QuoteCalculationService(loanRequest, offers);
